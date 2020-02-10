@@ -1,0 +1,52 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="container-about">
+    
+    <h1>Facial Emotion Recognition</h1>
+    
+    <p>
+        Under the guidance of Mr. Jitendra and Mr. Yogesh, I (Ishant Dahiya) am making a face and emotion recognition model to predict if the user is happy, sad, neutral, angry or in fear.
+        
+    </p>
+    <h3>Data Collection</h3>
+    
+    <h5>Databases used:</h5>
+    <ul>
+        <li>http://download.visgraf.impa.br/</li>
+        <li>http://www.consortium.ri.cmu.edu/data/ck/</li>
+        <li>http://grail.cs.washington.edu/projects/deepexpr/FERG_DB_256.zip</li>
+    </ul>
+    
+    <p>
+        Also to collect more images, I made a scraper using Selenium and urlib.request. I used these libraries becuase https://shutterstock.com used dynamically loaded pages with javascript, so I used firefox header with Selenium to get the data.
+
+    </p>        
+    
+    <h3>Data Arrangement</h3>
+    
+   <p>
+        The data was spread across different folders, coded differently in all the databases.
+        
+        I used some simple python scripts, to gather them into labelled folder so the model could read them easily.
+   </p>
+    
+    
+    <h3>Model</h3>
+    
+    <p>
+        Encountered some problems while creating the model with VGG-16 model. (will attach the error logs). Used the keggle challenge dataset and approach to create the next model.
+
+    </p>        
+    <h3>Deployment</h3>
+    
+    <p>
+        Used the Google Colab platform to run my model. My system’s hardware requirements were not adequate. The Colab platform also could run the model with GPU acceleration. 
+
+    </p>    
+</div>  
+
+
+
+{% endblock %}
