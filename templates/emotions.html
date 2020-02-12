@@ -1,10 +1,18 @@
-<h1>Facial Emotion Analyzer</h1>
-  <div id="recorder">
-    <button type="button" class="btn btn-danger" id="record">Record</button>
-<button type="button" class="btn btn-secondary" id="stop">Stop</button>
-    <!-- <a id="download"></a> -->
-        
-  </div>
-  <img id="video" src="{{ url_for('video_viewer') }}">
+{% extends 'layout.html' %}
 
-  <!-- {{ url_for('static', filename='recorder.js') }} -->
+{% block body %}
+
+<h1>Facial Emotion Analyzer</h1>
+
+<h4>Upload input image file(.jpeg, .png only) to analyze facial emotion</h4>
+
+<form method="POST" action="/upload" enctype="multipart/form-data">
+  <div class="form-group">
+    <label for="inputFile"> Image File Input </label>
+    <input type="file" name="inputFile">
+    
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+{% endblock %}
