@@ -4,15 +4,17 @@ from keras.models import model_from_json
 from keras.preprocessing import image
 
 #load model
-model = model_from_json(open("fer-colab.json", "r").read())
+model = model_from_json(open("fer-colab30.json", "r").read())
 #load weights
-model.load_weights('fer-colab.h5')
+model.load_weights('fer-colab30.h5')
 
 
 #face_cascade = cv2.CascadeClassifier('/home/ishant/anaconda3/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml')
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
 cap=cv2.VideoCapture(0)
+
+print(type(cap))
 
 while True:
     ret,test_img=cap.read()# captures frame and returns boolean value and captured image
