@@ -70,15 +70,18 @@ def upload():
             #find max indexed array
         max_index = np.argmax(predictions[0])
 
+        
+
         emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
         predicted_emotion = emotions[max_index]
+        print(predicted_emotion)
 
-        if predicted_emotion == 'angry', 'disgust', 'fear', 'sad':
-            predicted_emotion = 'Not Interested'
-        elif predicted_emotion == 'happy', 'surprise':
-            predicted_emotion = 'Interested'
+        if predicted_emotion in ('angry', 'disgust', 'fear', 'sad'):
+          predicted_emotion = 'Not Interested'
+        elif predicted_emotion == 'neutral':
+            predicted_emotion = "Neutral"
         else:
-            predicted_emotion = 'Neutral'
+          predicted_emotion = 'Interested'
 
         cv2.putText(test_img, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
         print(predicted_emotion)
