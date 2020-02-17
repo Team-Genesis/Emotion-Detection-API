@@ -6,6 +6,7 @@ import numpy as np
 from keras.models import model_from_json
 from keras.preprocessing import image
 from io import BytesIO
+import random
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ishant/ishant_linux/boongg_project/web_api/database/filesstorage.db'
@@ -48,7 +49,7 @@ def upload():
     file_data = FileContents.query.filter_by(id=newFile.id).first()
 
 
-    nparr = np.fromstring(img_str, np.uint8)
+    nparr = np.frombuffer(img_str, np.uint8)
     test_img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
 
     faces_detected = face_cascade.detectMultiScale(test_img, 1.32, 5)
@@ -66,15 +67,20 @@ def upload():
         tb._SYMBOLIC_SCOPE.value = True
 
         predictions = model.predict(img_pixels)
+        
+        
 
             #find max indexed array
         max_index = np.argmax(predictions[0])
 
+        print(max_index)
         
+        accuracy = predictions[0][max_index] * 100
 
         emotions = ('angry', 'disgust', 'fear', 'happy', 'sad', 'surprise', 'neutral')
         predicted_emotion = emotions[max_index]
-        print(predicted_emotion)
+        print(emotions)
+        # print(predicted_emotion)
 
         if predicted_emotion in ('angry', 'disgust', 'fear', 'sad'):
           predicted_emotion = 'Not Interested'
@@ -83,14 +89,18 @@ def upload():
         else:
           predicted_emotion = 'Interested'
 
-        cv2.putText(test_img, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,255), 2)
-        print(predicted_emotion)
+        cv2.putText(test_img, predicted_emotion, (int(x), int(y)), cv2.FONT_HERSHEY_SIMPLEX, 1, (0,0,0), 2)
+        # print(predicted_emotion)
 
     resized_img = cv2.resize(test_img, (1000, 700))
     
-
-
-    return predicted_emotion
+    img_name = predicted_emotion + str(random.randrange(1, 10000000, 1)) + '.png'
+    
+    img_dir = 'static/' + img_name
+    
+    cv2.imwrite(img_dir, resized_img)
+    
+    return render_template('result.html', img=img_name, emotion=predicted_emotion, acc=accuracy )
 
 
 

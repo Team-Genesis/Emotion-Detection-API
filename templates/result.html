@@ -1,0 +1,27 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class="emotion center">
+    <h1>Your result is ready:</h1>
+    
+    <img src="static/{{ img }}" class="responsive-image" width="450px" height="450px"/>
+    <h1>The predicted emotion is: {{ emotion }}
+
+
+        {% if 'Neutral' in emotion %}
+            &#128528
+        {% endif %}
+        {% if 'Not Interested' in emotion %}
+            &#128530
+        {% endif %}
+        {% if emotion == 'Interested' %}
+            &#128513
+        {% endif %}
+    
+    </h1>
+
+    <h3>The result is predicted with an accuracy of {{ acc }}%</h3>
+</div>
+
+{% endblock %}
