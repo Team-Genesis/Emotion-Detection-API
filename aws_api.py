@@ -10,7 +10,7 @@ import json
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/ishant/ishant_linux/boongg_project/web_api/database/filesstorage.db'
-db = SQLAlchemy(app)
+# db = SQLAlchemy(app)
 
 #load model
 model = model_from_json(open("fer-colab30.json", "r").read())
@@ -20,37 +20,30 @@ model.load_weights('fer-colab30.h5')
 #face_cascade = cv2.CascadeClassifier('/home/ishant/anaconda3/share/OpenCV/haarcascades/haarcascade_frontalface_default.xml')
 face_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + "haarcascade_frontalface_default.xml")
 
-
-# ===================FOR DEVELOPMENT ONLY=================
-app.debug = True
-# =========================================
-
-class FileContents(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    fileName = db.Column(db.String(300))
-    data = db.Column(db.LargeBinary)
-    predicted_emotion = db.Column(db.String(300))
-    correct = db.Column(db.Boolean())
-
-@app.route('/whatemotion')
-def emotion():
-    return render_template('emotions.html')
-
-
+# class FileContents(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     fileName = db.Column(db.String(300))
+#     data = db.Column(db.LargeBinary)
+#     predicted_emotion = db.Column(db.String(300))
+#     correct = db.Column(db.Boolean())
+@app.route('/')
+def hello():
+    return "Hello World!"
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    file = request.files['inputFile']
-    file_Name = file.filename
-    img_str = file.read()
-    newFile = FileContents(fileName=file_Name, data=file.read())
-    db.session.add(newFile)
-    db.session.commit()
-    file_data = FileContents.query.filter_by(id=newFile.id).first()
-
-
-    nparr = np.frombuffer(img_str, np.uint8)
-    test_img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
+    # file = request.files['inputFile']
+    # file_Name = file.filename
+    # img_str = file.read()
+    # newFile = FileContents(fileName=file_Name, data=file.read())
+    # db.session.add(newFile)
+    # db.session.commit()
+    # file_data = FileContents.query.filter_by(id=newFile.id).first()
+    
+        
+    test_img = cv2.imdecode(np.fromstring(request.files['file'].read(), np.uint8), cv2.IMREAD_GRAYSCALE)
+    # nparr = np.frombuffer(img_str, np.uint8)
+    # test_img = cv2.imdecode(nparr, cv2.IMREAD_GRAYSCALE)
 
     faces_detected = face_cascade.detectMultiScale(test_img, 1.32, 5)
 
@@ -98,23 +91,20 @@ def upload():
     
     img_dir = 'static/' + img_name
     
+    x = {
+        "Image:" : img_name,
+        "EMOTION:" : predicted_emotion,
+        "ACCURACY:" : accuracy
+    }
+    
+    json_result = json.dumps(x)
+    
     cv2.imwrite(img_dir, resized_img)
     
-    return render_template('result.html', img=img_name, emotion=predicted_emotion, acc=accuracy )
-
-
-
-@app.route('/')
-def index():
-    return render_template('home.html')
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
+    return json_result
 
 
 
 # --bottom--
 if __name__ == '__main__':
-    app.run(threaded=False)
+    app.run(host='0.0.0.0', port=80)
