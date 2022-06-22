@@ -27,7 +27,7 @@ boto3 == 1.9.66
 # image.py: 2
 # imagetoCSV.py: 1
 # test.py: 1
-numpy == 1.18.1
+numpy == 1.22.0
 
 # api_predict.py: 1
 # app.py: 3
